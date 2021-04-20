@@ -46,6 +46,7 @@ export const useStyles = makeStyles(theme => ({
         }),
         // TODO need to use appBar height from themes.
         paddingTop: 64,
+        height: '100vh',
     },
 }));
 
