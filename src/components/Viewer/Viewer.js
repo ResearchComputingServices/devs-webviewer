@@ -15,7 +15,7 @@ export const useStyles = makeStyles(() => ({
         border: 'solid black',
         height: '100%',
         width: '100%',
-        margin: 15,
+        margin: 5,
         minWidth: 450,
     },
     svgViewer: {
@@ -23,14 +23,13 @@ export const useStyles = makeStyles(() => ({
         border: 'solid black',
         height: '100%',
         width: '100%',
-        margin: 15,
+        margin: 5,
         minWidth: 450,
     },
 }));
 
-const Diagram = () => {
+const Viewer = () => {
     const classes = useStyles();
-
 
     return (
         <Box
@@ -39,18 +38,16 @@ const Diagram = () => {
         >
             <Box
                 className={classes.jsonViewer}
-                >   
-            </Box>
+            />
             <Box
                 className={classes.svgViewer}
-            >
-            </Box>
+            />
         </Box>
     );
 };
 
-Diagram.propTypes = {};
+Viewer.propTypes = {};
 
-Diagram.defaultProps = {};
+Viewer.defaultProps = {};
 
-export default Diagram;
+export default Viewer;
