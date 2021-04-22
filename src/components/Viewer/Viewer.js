@@ -91,7 +91,6 @@ const Viewer = () => {
                     >
                         assign
                 </Button>
-
                 <IconButton
                     className={classes.downloadButton}
                     color = 'primary'
