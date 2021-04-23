@@ -99,7 +99,6 @@ const Viewer = () => {
                 >
                     <GetAppIcon />        
                 </IconButton>
-
                 <IconButton
                     className={classes.replayButton}
                     color='primary'
