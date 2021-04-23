@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '../Button';
 
 export const useStyles = makeStyles(theme => ({
-    error: { color: theme.palette.error.main },
-    button: { marginRight: theme.spacing(2) },
+    error: { color: theme.palette.error.main }
 }));
 
 const FileUploader = ({
@@ -16,6 +15,7 @@ const FileUploader = ({
     onSave,
     error,
     acceptedFiles,
+    textShown,
 }) => {
     const classes = useStyles();
     const [filename, setFilename] = React.useState('');
@@ -52,7 +52,7 @@ const FileUploader = ({
                 color='primary'
                 onClick={handleOpen}
             >
-                {filename === '' ? t('fileUploader.chooseFile') : t('fileUploader.changeFile')}
+                {textShown}
             </Button>
             <DropzoneDialog
                 acceptedFiles={acceptedFiles}
@@ -77,6 +77,8 @@ FileUploader.propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
     onSave: PropTypes.func.isRequired,
+    acceptedFiles: PropTypes.array,
+    textShown: PropTypes.string,
     error: PropTypes.oneOfType([
         PropTypes.object,
         PropTypes.bool,
