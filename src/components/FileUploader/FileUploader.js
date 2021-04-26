@@ -16,20 +16,22 @@ const FileUploader = ({
     error,
     acceptedFiles,
     textShown,
+    setFileName,
 }) => {
     const classes = useStyles();
-    const [filename, setFilename] = React.useState('');
+    const [filename, setFilename] = React.useState("");
     const [open, setOpen] = React.useState(false);
-    const [t] = useTranslation('common');
+    const [t] = useTranslation("common");
     const characterLimit = 20;
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    const handleSave = files => {
+    const handleSave = (files) => {
         setOpen(false);
         setFilename(files[0].name);
+        setFileName(files[0].name);
         onSave(files);
     };
 
