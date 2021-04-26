@@ -5,9 +5,7 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import { useTranslation } from 'react-i18next';
 import Button from '../Button';
 
-export const useStyles = makeStyles(theme => ({
-    error: { color: theme.palette.error.main }
-}));
+export const useStyles = makeStyles(theme => ({ error: { color: theme.palette.error.main } }));
 
 const FileUploader = ({
     className,
@@ -19,16 +17,16 @@ const FileUploader = ({
     setFileName,
 }) => {
     const classes = useStyles();
-    const [filename, setFilename] = React.useState("");
+    const [filename, setFilename] = React.useState('');
     const [open, setOpen] = React.useState(false);
-    const [t] = useTranslation("common");
+    const [t] = useTranslation('common');
     const characterLimit = 20;
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    const handleSave = (files) => {
+    const handleSave = files => {
         setOpen(false);
         setFilename(files[0].name);
         setFileName(files[0].name);
@@ -65,12 +63,16 @@ const FileUploader = ({
                 open={open}
                 showPreviews
             />
-            {
-                !error && filename.length > characterLimit
-                    ? <Tooltip title={filename || ''}><Typography>{formatFilename(filename, characterLimit)}</Typography></Tooltip>
-                    : <Typography>{filename}</Typography>
-            }
-            {error && <Typography className={classes.error}>{error.message}</Typography>}
+            {!error && filename.length > characterLimit ? (
+                <Tooltip title={filename || ''}>
+                    <Typography>{formatFilename(filename, characterLimit)}</Typography>
+                </Tooltip>
+            ) : (
+                ''
+            )}
+            {error && (
+                <Typography className={classes.error}>{error.message}</Typography>
+            )}
         </Box>
     );
 };
@@ -81,10 +83,7 @@ FileUploader.propTypes = {
     onSave: PropTypes.func.isRequired,
     acceptedFiles: PropTypes.array,
     textShown: PropTypes.string,
-    error: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.bool,
-    ]),
+    error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     acceptedFiles: PropTypes.array,
 };
 
