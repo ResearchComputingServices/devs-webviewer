@@ -142,7 +142,7 @@ const Viewer = () => {
                     className={classes.loadButton}
                     color = 'primary'
                 >
-                        load svg
+                    load svg
                 </Button>
 
                 <Button
@@ -151,7 +151,7 @@ const Viewer = () => {
                     endIcon={<CheckCircleIcon></CheckCircleIcon>}
                     variant='contained'
                 >
-                        assign
+                    assign
                 </Button>
                 <IconButton
                     className={classes.downloadButton}
