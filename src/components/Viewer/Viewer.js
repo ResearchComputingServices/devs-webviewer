@@ -72,9 +72,10 @@ const Viewer = () => {
     const [jsonData, uploadJson] = useState(undefined);
     const [category, setCategory] = useState('');
     const [fileName, setFileName] = useState('');
-    const handleChange = (value) => {
-        setCategory(value);
+    const handleChange = e => {
+        setCategory(e.target.value);
     };
+    
     return (
         <Box
             className={classes.root}
@@ -82,7 +83,7 @@ const Viewer = () => {
         >
             <Box
                 className={classes.jsonViewer}
-            >   
+            >
                 {jsonData ? (
                     <div
                         style={{
@@ -90,47 +91,48 @@ const Viewer = () => {
                             marginLeft: "5%",
                             height: "80%",
                             display: "grid",
-                            gridTemplateColumns: "33% 35% 35%",
+                            gridTemplateColumns: "30% 30% 30%",
                             gridAutoRows: "20% 20% 20% 20%",
                             rowGap: "2%",
-                    }}
+                            overflow: "scroll",
+                        }}
                     >
-                        <div style={{ gridColumn: '1/4' }}>
-                            <FormControl style={{width: "100px" }}>
-                                <InputLabel id = 'demo-simple-select-label'>Nodes</InputLabel>
+                        <div style={{ gridColumn: "1/4" }}>
+                            <FormControl style={{ width: "100px" }}>
+                                {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
                                 <Select
-                                    labelId = "demo-simple-select-label"
-                                    id = "demo-simple-select"
-                                    value={category}
+                                    id="demo-simple-select"
+                                    labelId="demo-simple-select-label"
                                     onChange={handleChange}
+                                    value={category}
                                 >
-                                    <MenuItem value={10}>Ports</MenuItem>
-                                    <MenuItem value={20}>Links</MenuItem>
+                                    {Object.keys(jsonData).map(d => {
+                                        return (
+                                            <MenuItem key={d} value={d}>
+                                                {d}
+                                            </MenuItem>
+                                        );
+                                    })}
                                 </Select>
                             </FormControl>
                         </div>
-                        <Button color="primary">TOP Coupled</Button>
-                        <Button color="primary">input_reader atomic</Button>
-                        <Button color="primary">ABP Coupled</Button>
-                        <Button color="primary">serder1 atomic</Button>
-                        <Button color="primary">receiver1 atomic</Button>
-                        <Button color="primary">network coupled</Button>
-                        <Button color="primary">subnet1 atomic</Button>
-                        <Button color="primary">subnet2 atomic</Button>
                     </div>
+
                 ) : (
-                    ''
+                    ""
                 )}
-                {}
                 <Typography className={classes.fileName}>{fileName}</Typography>
                 <FileUploader
-                    setFileName={setFileName}
-                    className={classes.loadButton}
                     acceptedFiles={['application/json']}
-                    textShown='load json'
+                    className={classes.loadButton}
                     onSave={files => {
-                        uploadJson(files[0]);
+                        getJson(files).then((data) => {
+                            console.log("onsave==>", data);
+                            uploadJson(data);
+                            });
                     }}
+                    setFileName={setFileName}
+                    textShown='load json'
                 />
             </Box>
             <Box
@@ -139,7 +141,7 @@ const Viewer = () => {
                 <Button
                     className={classes.loadButton}
                     color = 'primary'
-                    >
+                >
                         load svg
                 </Button>
 
@@ -148,7 +150,7 @@ const Viewer = () => {
                     color='primary'
                     endIcon={<CheckCircleIcon></CheckCircleIcon>}
                     variant='contained'
-                    >
+                >
                         assign
                 </Button>
                 <IconButton
@@ -160,8 +162,8 @@ const Viewer = () => {
                 <IconButton
                     className={classes.replayButton}
                     color='primary'
-                    >
-                        <ReplayIcon />
+                >
+                    <ReplayIcon />
                 </IconButton>
             </Box>
         </Box>
@@ -171,5 +173,21 @@ const Viewer = () => {
 Viewer.propTypes = {};
 
 Viewer.defaultProps = {};
+
+function getJson(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsText(new Blob(file), "utf-8");
+  
+        reader.onload = result => {
+            let data = JSON.parse(result.target.result);
+            resolve(data);
+        };
+  
+        reader.onerror = () => {
+            reject(null);
+        };
+    });
+}
 
 export default Viewer;
