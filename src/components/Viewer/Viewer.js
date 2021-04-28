@@ -1,14 +1,11 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, makeStyles } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ReplayIcon from '@material-ui/icons/Replay';
 import Button from '../Button';
@@ -46,13 +43,13 @@ export const useStyles = makeStyles(() => ({
         minWidth: 450,
     },
     loadButton: {
-        position: "absolute",
+        position: 'absolute',
         bottom: 0,
         right: 0,
         margin: 5,
     },
     assignButton: {
-        position: 'absolute', 
+        position: 'absolute',
         margin: 5,
     },
     downloadButton: {
@@ -65,6 +62,20 @@ export const useStyles = makeStyles(() => ({
         right: 35,
         margin: 5,
     },
+    rootCard: { minWidth: 275 },
+    bullet: {
+        display: 'inline-block',
+        margin: '0 2px',
+        transform: 'scale(0.8)',
+    },
+    title: {
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    pos: {
+        marginBottom: 12,
+        textAlign: 'center',
+    },
 }));
 
 const Viewer = () => {
@@ -75,72 +86,92 @@ const Viewer = () => {
     const handleChange = e => {
         setCategory(e.target.value);
     };
-    
+
     return (
         <Box
             className={classes.root}
             flexDirection='row'
         >
-            <Box
-                className={classes.jsonViewer}
-            >
+            <Box className={classes.jsonViewer}>
                 {jsonData ? (
                     <div
                         style={{
-                            marginTop: "10%",
-                            marginLeft: "5%",
-                            height: "80%",
-                            display: "grid",
-                            gridTemplateColumns: "30% 30% 30%",
-                            gridAutoRows: "20% 20% 20% 20%",
-                            rowGap: "2%",
-                            overflow: "scroll",
+                            marginTop: '10%',
+                            marginLeft: '5%',
+                            height: '80%',
+                            display: 'grid',
+                            gridTemplateColumns: '30% 30% 30%',
+                            gridAutoRows: '20% 20% 20% 20%',
+                            rowGap: '2%',
+                            overflow: 'scroll',
                         }}
                     >
-                        <div style={{ gridColumn: "1/4" }}>
-                            <FormControl style={{ width: "100px" }}>
-                                {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
+                        <div style={{ gridColumn: '1/4' }}>
+                            <FormControl style={{ width: '100px' }}>
                                 <Select
-                                    id="demo-simple-select"
-                                    labelId="demo-simple-select-label"
+                                    id='demo-simple-select'
+                                    labelId='demo-simple-select-label'
                                     onChange={handleChange}
                                     value={category}
                                 >
-                                    {Object.keys(jsonData).map(d => {
-                                        return (
-                                            <MenuItem key={d} value={d}>
-                                                {d}
-                                            </MenuItem>
-                                        );
-                                    })}
+                                    {Object.keys(jsonData).map(d => (
+                                        <MenuItem
+                                            key={d}
+                                            value={d}
+                                        >
+                                            {d}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </div>
+                        {category
+              && jsonData[category].map((d, i) => (
+                  <Card
+                      key={`key${i}`}
+                      style={{ textAlign: 'center', display: 'grid', gridTemplateColumns: '1fr', alignContent: 'center', margin: '4px' }}
+                      variant='outlined'
+                  >
+                      {Object.entries(d).map(v => (
+                          <div >
+                              <span
+                                  className={classes.title}
+                                  color='textSecondary'
+                              >
+                                  {`${v[0]}:`}
+                              </span>
+                              <span
+                                  className={classes.pos}
+                                  color='textSecondary'
+                              >
+                                  {v[1]}
+                              </span>
+                          </div>
+                      ))}
+                  </Card>
+              ))}
                     </div>
-
                 ) : (
-                    ""
+                    ''
                 )}
                 <Typography className={classes.fileName}>{fileName}</Typography>
                 <FileUploader
                     acceptedFiles={['application/json']}
                     className={classes.loadButton}
                     onSave={files => {
-                        getJson(files).then((data) => {
-                            console.log("onsave==>", data);
+                        getJson(files).then(data => {
+                            console.log('onsave==>', data);
                             uploadJson(data);
-                            });
+                        });
                     }}
                     setFileName={setFileName}
                     textShown='load json'
                 />
             </Box>
-            <Box
-                className={classes.svgViewer}
-            >
+            <Box className={classes.svgViewer}>
                 <Button
                     className={classes.loadButton}
-                    color = 'primary'
+                    color='primary'
                 >
                     load svg
                 </Button>
@@ -148,16 +179,16 @@ const Viewer = () => {
                 <Button
                     className={classes.assignButton}
                     color='primary'
-                    endIcon={<CheckCircleIcon></CheckCircleIcon>}
+                    endIcon={<CheckCircleIcon />}
                     variant='contained'
                 >
                     assign
                 </Button>
                 <IconButton
                     className={classes.downloadButton}
-                    color = 'primary'
+                    color='primary'
                 >
-                    <GetAppIcon />        
+                    <GetAppIcon />
                 </IconButton>
                 <IconButton
                     className={classes.replayButton}
@@ -170,24 +201,23 @@ const Viewer = () => {
     );
 };
 
+
 Viewer.propTypes = {};
 
 Viewer.defaultProps = {};
-
 function getJson(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsText(new Blob(file), "utf-8");
-  
+        reader.readAsText(new Blob(file), 'utf-8');
+
         reader.onload = result => {
-            let data = JSON.parse(result.target.result);
+            const data = JSON.parse(result.target.result);
             resolve(data);
         };
-  
+
         reader.onerror = () => {
             reject(null);
         };
     });
 }
-
 export default Viewer;
