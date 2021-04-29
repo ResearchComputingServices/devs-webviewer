@@ -86,6 +86,22 @@ const Viewer = () => {
     const handleChange = e => {
         setCategory(e.target.value);
     };
+//getJson will be replaced with async func in the future version
+    function getJson(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsText(new Blob(file), 'utf-8');
+
+            reader.onload = result => {
+                const data = JSON.parse(result.target.result);
+                resolve(data);
+            };
+
+            reader.onerror = () => {
+                reject(null);
+            };
+        });
+    }
 
     return (
         <Box
@@ -94,7 +110,7 @@ const Viewer = () => {
         >
             <Box className={classes.jsonViewer}>
                 {jsonData ? (
-                    <div
+                    <Box
                         style={{
                             marginTop: '10%',
                             marginLeft: '5%',
@@ -106,11 +122,9 @@ const Viewer = () => {
                             overflow: 'scroll',
                         }}
                     >
-                        <div style={{ gridColumn: '1/4' }}>
+                        <Box style={{ gridColumn: '1/4' }}>
                             <FormControl style={{ width: '100px' }}>
                                 <Select
-                                    id='demo-simple-select'
-                                    labelId='demo-simple-select-label'
                                     onChange={handleChange}
                                     value={category}
                                 >
@@ -124,7 +138,7 @@ const Viewer = () => {
                                     ))}
                                 </Select>
                             </FormControl>
-                        </div>
+                        </Box>
                         {category
               && jsonData[category].map((d, i) => (
                   <Card
@@ -133,7 +147,7 @@ const Viewer = () => {
                       variant='outlined'
                   >
                       {Object.entries(d).map(v => (
-                          <div >
+                          <Box >
                               <span
                                   className={classes.title}
                                   color='textSecondary'
@@ -146,11 +160,11 @@ const Viewer = () => {
                               >
                                   {v[1]}
                               </span>
-                          </div>
+                          </Box>
                       ))}
                   </Card>
               ))}
-                    </div>
+                    </Box>
                 ) : (
                     ''
                 )}
@@ -201,23 +215,8 @@ const Viewer = () => {
     );
 };
 
-
 Viewer.propTypes = {};
 
 Viewer.defaultProps = {};
-function getJson(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsText(new Blob(file), 'utf-8');
 
-        reader.onload = result => {
-            const data = JSON.parse(result.target.result);
-            resolve(data);
-        };
-
-        reader.onerror = () => {
-            reject(null);
-        };
-    });
-}
 export default Viewer;
