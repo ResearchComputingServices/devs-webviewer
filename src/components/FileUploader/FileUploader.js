@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, makeStyles, Typography, Tooltip } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { useTranslation } from 'react-i18next';
 import Button from '../Button';
 
 export const useStyles = makeStyles(theme => ({ error: { color: theme.palette.error.main } }));
@@ -14,13 +13,9 @@ const FileUploader = ({
     error,
     acceptedFiles,
     textShown,
-    setFileName,
 }) => {
     const classes = useStyles();
-    const [filename, setFilename] = React.useState('');
     const [open, setOpen] = React.useState(false);
-    const [t] = useTranslation('common');
-    const characterLimit = 20;
 
     const handleClose = () => {
         setOpen(false);
@@ -28,16 +23,12 @@ const FileUploader = ({
 
     const handleSave = files => {
         setOpen(false);
-        setFilename(files[0].name);
-        setFileName(files[0].name);
         onSave(files);
     };
 
     const handleOpen = () => {
         setOpen(true);
     };
-
-    const formatFilename = (str, limit) => (str ? (str.length > limit ? `${str.slice(0, limit)}...` : str) : null);
 
     return (
         <Box
@@ -63,13 +54,6 @@ const FileUploader = ({
                 open={open}
                 showPreviews
             />
-            {!error && filename.length > characterLimit ? (
-                <Tooltip title={filename || ''}>
-                    <Typography>{formatFilename(filename, characterLimit)}</Typography>
-                </Tooltip>
-            ) : (
-                ''
-            )}
             {error && (
                 <Typography className={classes.error}>{error.message}</Typography>
             )}
@@ -84,7 +68,6 @@ FileUploader.propTypes = {
     acceptedFiles: PropTypes.array,
     textShown: PropTypes.string,
     error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-    acceptedFiles: PropTypes.array,
 };
 
 FileUploader.defaultProps = {

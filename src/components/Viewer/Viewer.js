@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Typography, makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import FormControl from '@material-ui/core/FormControl';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ReplayIcon from '@material-ui/icons/Replay';
 import Button from '../Button';
@@ -62,123 +62,118 @@ export const useStyles = makeStyles(() => ({
         right: 35,
         margin: 5,
     },
-    rootCard: { minWidth: 275 },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
+    mainCards: {
+        position: 'relative',
+        height: '86%',
+        width: '98%',
+        margin: 10,
+        minWidth: 450,
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent: 'flex-start',
+        overflow: 'auto',
     },
-    title: {
-        fontSize: 14,
-        textAlign: 'center',
+    cardContentJson: {
+        minWidth: 180,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+        cursor: 'pointer',
+        border: 'solid',
     },
-    pos: {
-        marginBottom: 12,
-        textAlign: 'center',
-    },
+
 }));
 
 const Viewer = () => {
     const classes = useStyles();
-    const [jsonData, uploadJson] = useState(undefined);
-    const [category, setCategory] = useState('');
-    const [fileName, setFileName] = useState('');
-    const handleChange = e => {
-        setCategory(e.target.value);
+    const [jsonData, setJson] = useState();
+    const [selectionName, setSelection] = useState('');
+
+    const handleChange = event => {
+        const e = event.target.value;
+        setSelection(e);
     };
-//getJson will be replaced with async func in the future version
-    function getJson(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsText(new Blob(file), 'utf-8');
 
-            reader.onload = result => {
-                const data = JSON.parse(result.target.result);
-                resolve(data);
-            };
-
-            reader.onerror = () => {
-                reject(null);
-            };
-        });
-    }
+    const saveJSON = async file => {
+        const text = await file.text();
+        setJson(JSON.parse(text));
+    };
 
     return (
         <Box
             className={classes.root}
             flexDirection='row'
         >
-            <Box className={classes.jsonViewer}>
-                {jsonData ? (
-                    <Box
-                        style={{
-                            marginTop: '10%',
-                            marginLeft: '5%',
-                            height: '80%',
-                            display: 'grid',
-                            gridTemplateColumns: '30% 30% 30%',
-                            gridAutoRows: '20% 20% 20% 20%',
-                            rowGap: '2%',
-                            overflow: 'scroll',
-                        }}
-                    >
-                        <Box style={{ gridColumn: '1/4' }}>
-                            <FormControl style={{ width: '100px' }}>
-                                <Select
-                                    onChange={handleChange}
-                                    value={category}
-                                >
-                                    {Object.keys(jsonData).map(d => (
-                                        <MenuItem
-                                            key={d}
-                                            value={d}
-                                        >
-                                            {d}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                        {category
-              && jsonData[category].map((d, i) => (
-                  <Card
-                      key={`key${i}`}
-                      style={{ textAlign: 'center', display: 'grid', gridTemplateColumns: '1fr', alignContent: 'center', margin: '4px' }}
-                      variant='outlined'
-                  >
-                      {Object.entries(d).map(v => (
-                          <Box >
-                              <span
-                                  className={classes.title}
-                                  color='textSecondary'
-                              >
-                                  {`${v[0]}:`}
-                              </span>
-                              <span
-                                  className={classes.pos}
-                                  color='textSecondary'
-                              >
-                                  {v[1]}
-                              </span>
-                          </Box>
-                      ))}
-                  </Card>
-              ))}
-                    </Box>
-                ) : (
-                    ''
-                )}
-                <Typography className={classes.fileName}>{fileName}</Typography>
+            <Box
+                className={classes.jsonViewer}
+            >
+                <Select
+                    defaultValue=''
+                    disabled={!(jsonData && Object.keys(jsonData).length)}
+                    onChange={handleChange}
+                    variant='outlined'
+                >
+                    {jsonData && Object.keys(jsonData).length && Object.keys(jsonData).map(item => (
+                        <MenuItem
+                            key={item}
+                            value={item}
+                        >
+                            {item}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <Box
+                    className={classes.mainCards}
+                >
+                    {selectionName && Array.isArray(jsonData[selectionName]) && jsonData[selectionName].map((card, index) => (
+                        <Card
+                            key={index}
+                            className={classes.cardContentJson}
+                        >
+                            <CardContent>
+                                {Object.entries(card).map((row, indexrow) => (
+                                    <Typography
+                                        key={indexrow}
+                                        variant='body2'
+                                    >
+                                        <b>{row[0]}</b>
+                                        {`: ${row[1]}`}
+                                    </Typography>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    ))}
+                    {selectionName && !Array.isArray(jsonData[selectionName]) && (
+                        <Card
+                            className={classes.cardContentJson}
+                        >
+                            <CardContent>
+                                {Object.entries(jsonData[selectionName]).map((row, indexrow) => (
+                                    <Typography
+                                        key={indexrow}
+                                        variant='body'
+                                    >
+                                        <b>{row[0]}</b>
+                                        {`: ${row[1]}`}
+                                    </Typography>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    )}
+                </Box>
+
                 <FileUploader
-                    acceptedFiles={['application/json']}
+                    acceptedFiles={[
+                        'application/json',
+                    ]}
                     className={classes.loadButton}
                     onSave={files => {
-                        getJson(files).then(data => {
-                            console.log('onsave==>', data);
-                            uploadJson(data);
-                        });
+                        saveJSON(files[0]);
                     }}
-                    setFileName={setFileName}
                     textShown='load json'
                 />
             </Box>
