@@ -64,33 +64,31 @@ export const useStyles = makeStyles(() => ({
     },
     mainCards: {
         position: 'relative',
-        height: '86%',
-        width: '98%',
-        margin: 10,
-        minWidth: 450,
         display: 'flex',
         flexWrap: 'wrap',
         flexDirection: 'row',
         justifyContent: 'center',
         alignContent: 'flex-start',
         overflow: 'auto',
+        height: '85%',
+        width: '90%',
+        margin: 18,
     },
     cardContentJson: {
-        minWidth: 180,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 10,
         cursor: 'pointer',
         border: 'solid',
+        margin: 8,
     },
 
 }));
 
 const Viewer = () => {
     const classes = useStyles();
-    const [jsonData, setJson] = useState();
+    const [jsonData, setJson] = useState('');
     const [selectionName, setSelection] = useState('');
 
     const handleChange = event => {
