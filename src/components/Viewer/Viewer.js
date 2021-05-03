@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ReplayIcon from '@material-ui/icons/Replay';
+import SVG from 'react-inlinesvg';
 import Button from '../Button';
 import FileUploader from '../FileUploader';
 
@@ -41,6 +42,12 @@ export const useStyles = makeStyles(() => ({
         width: '100%',
         margin: 5,
         minWidth: 450,
+    },
+    svgLoader: {
+        position: 'relative',
+        height: '80%',
+        width: '90%',
+        margin: 10,
     },
     loadButton: {
         position: 'absolute',
@@ -105,7 +112,7 @@ const Viewer = () => {
     const readSVGAsURL = file => new Promise(resolve => {
         const fileReader = new FileReader();
         fileReader.onload = () => resolve(fileReader.result);
-        fileReader.readSVGAsURL(file);
+        fileReader.readAsDataURL(file);
     });
 
     const saveSVG = async files => {
@@ -188,14 +195,19 @@ const Viewer = () => {
                 />
             </Box>
             <Box className={classes.svgViewer}>
+                {svgData && (
+                    <SVG
+                        className={classes.svgLoader}
+                        id='popup-svg'
+                        src={svgData}
+                    />
+                )}
                 <FileUploader
                     acceptedFiles={[
                         'image/svg+xml',
                     ]}
                     className={classes.loadButton}
-                    onSave={files => {
-                        saveSVG(files[0]);
-                    }}
+                    onSave={saveSVG}
                     textShown='load svg'
                 />
 
