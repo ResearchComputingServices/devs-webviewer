@@ -42,6 +42,12 @@ export const useStyles = makeStyles(() => ({
         margin: 5,
         minWidth: 450,
     },
+    svgLoader: {
+        position: 'relative',
+        height: '85%',
+        width: '98%',
+        margin: 10,
+    },
     loadButton: {
         position: 'absolute',
         bottom: 0,
@@ -74,15 +80,6 @@ export const useStyles = makeStyles(() => ({
         width: '90%',
         margin: 18,
     },
-    cardContentJson: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        border: 'solid',
-        margin: 8,
-    },
 
 }));
 
@@ -90,6 +87,7 @@ const Viewer = () => {
     const classes = useStyles();
     const [jsonData, setJson] = useState('');
     const [selectionName, setSelection] = useState('');
+    const [svgData, setSVG] = useState('');
 
     const handleChange = event => {
         const e = event.target.value;
@@ -99,6 +97,17 @@ const Viewer = () => {
     const saveJSON = async file => {
         const text = await file.text();
         setJson(JSON.parse(text));
+    };
+
+    const readSVGAsURL = file => new Promise(resolve => {
+        const fileReader = new FileReader();
+        fileReader.onload = () => resolve(fileReader.result);
+        fileReader.readSVGAsURL(file);
+    });
+
+    const saveSVG = async files => {
+        const url = await readSVGAsURL(files[0]);
+        setSVG(url);
     };
 
     return (
@@ -176,12 +185,16 @@ const Viewer = () => {
                 />
             </Box>
             <Box className={classes.svgViewer}>
-                <Button
+                <FileUploader
+                    acceptedFiles={[
+                        'image/svg+xml',
+                    ]}
                     className={classes.loadButton}
-                    color='primary'
-                >
-                    load svg
-                </Button>
+                    onSave={files => {
+                        saveSVG(files[0]);
+                    }}
+                    textShown='load svg'
+                />
 
                 <Button
                     className={classes.assignButton}
