@@ -42,12 +42,6 @@ export const useStyles = makeStyles(() => ({
         margin: 5,
         minWidth: 450,
     },
-    svgLoader: {
-        position: 'relative',
-        height: '85%',
-        width: '98%',
-        margin: 10,
-    },
     loadButton: {
         position: 'absolute',
         bottom: 0,
@@ -79,6 +73,15 @@ export const useStyles = makeStyles(() => ({
         height: '85%',
         width: '90%',
         margin: 18,
+    },
+    cardContentJson: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        border: 'solid',
+        margin: 8,
     },
 
 }));
