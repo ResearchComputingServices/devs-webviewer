@@ -195,13 +195,7 @@ const Viewer = () => {
                 />
             </Box>
             <Box className={classes.svgViewer}>
-                {svgData && (
-                    <SVG
-                        className={classes.svgLoader}
-                        id='popup-svg'
-                        src={svgData}
-                    />
-                )}
+
                 <FileUploader
                     acceptedFiles={[
                         'image/svg+xml',
@@ -231,6 +225,13 @@ const Viewer = () => {
                 >
                     <ReplayIcon />
                 </IconButton>
+                {svgData && (
+                    <SVG
+                        className={classes.svgLoader}
+                        id='popup-svg'
+                        src={svgData}
+                    />
+                )}
             </Box>
         </Box>
     );
